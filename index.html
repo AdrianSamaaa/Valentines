@@ -6,5 +6,251 @@
     <title>Will You Be My Poopy Baby Valentine? </title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-       </body>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: 0;
+            overflow: hidden;
+            transition: background 0.5s ease;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            position: relative;
+            transform: scale(0.9);
+            animation: popIn 0.8s ease forwards;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #ff6b6b;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        p {
+            color: #555;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        #yesBtn {
+            background: #ff6b6b;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+        #noBtn {
+            background: #f0f0f0;
+            color: #666;
+        }
+        #yesBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(255, 107, 107, 0.6);
+        }
+        #noBtn:hover {
+            background: #e0e0e0;
+        }
+        .hidden {
+            display: none;
+        }
+        .heart {
+            position: absolute;
+            pointer-events: none;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        .photo-frame {
+            margin: 20px auto;
+            width: 200px;
+            height: 200px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: #f8f8f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .photo-frame img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="question">
+        <h1>Will You Be My Poopy BabyValentine? 💝</h1>
+        <p>I promise lots of love, laughter, and maybe some freaky stuff too!</p>
+        
+        <!-- PHOTO FRAME - REPLACE THE SRC WITH YOUR PHOTO URL -->
+        <div class="photo-frame">
+            <img src="https://images.unsplash.com/photo-1516589091380-f5e2c2cd32e3?w=500&auto=format&fit=crop" alt="Cute couple">
+        </div>
+        
+        <div class="buttons">
+            <button id="yesBtn">Yes! 😍</button>
+            <button id="noBtn">No... 🤔</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="response">
+        <h1>Yay! Your my poopy baby Valentine! 🎉</h1>
+        <p>I promise to be the best Valentine you've ever had! Get ready for an amazing time together! 💖</p>
+        
+        <!-- SUCCESS PHOTO - REPLACE THE SRC WITH YOUR PHOTO URL -->
+        <div class="photo-frame">
+            <img src="https://images.unsplash.com/photo-1516589091380-f5e2c2cd32e3?w=500&auto=format&fit=crop" alt="Happy couple">
+        </div>
+        
+        <button id="restartBtn" style="margin-top: 20px;">Click for a surprise! 🎁</button>
+        <!-- Dancing Baby GIF (initially hidden) -->
+        <div id="dancingBaby" style="display: none; margin: 20px auto; text-align: center;">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3h0cWQ2Y3RlNXRtY2FvZHV2dGx3cXl6Z2F1N3U3OGx5Z2V2dDB6ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKSha51ATTx9KzC/giphy.gif" alt="Dancing Baby" style="max-width: 300px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+        </div>
+    </div>
+
+    <!-- Hidden audio element for surprise music -->
+    <audio id="surpriseMusic" preload="auto">
+        <!-- Replace with your music file URL or use this direct link to the song -->
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const questionDiv = document.getElementById('question');
+        const responseDiv = document.getElementById('response');
+        const restartBtn = document.getElementById('restartBtn');
+        const surpriseImage = document.getElementById('surpriseImage');
+        const surpriseMusic = document.getElementById('surpriseMusic');
+        const dancingBaby = document.getElementById('dancingBaby');
+        let surpriseShown = false;
+        
+        // Array of funny responses for the 'No' button
+        const noResponses = [
+            "Are you sure?",
+            "Really sure?",
+            "Think again!",
+            "Last chance!",
+            "Surely not?",
+            "You might regret this!",
+            "Give it another thought!",
+            "Are you absolutely certain?",
+            "This could be a mistake!",
+            "Have a heart!",
+            "Don't be so cold!",
+            "Change of heart?",
+            "Wouldn't you reconsider?",
+            "Is that your final answer?"
+        ];
+        
+        let clickCount = 0;
+        
+        // Yes button click
+        yesBtn.addEventListener('click', () => {
+            questionDiv.classList.add('hidden');
+            responseDiv.classList.remove('hidden');
+            createHearts();
+        });
+        
+        // No button hover effect
+        noBtn.addEventListener('mouseover', () => {
+            const maxX = window.innerWidth - 100;
+            const maxY = window.innerHeight - 50;
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = Math.random() * maxX + 'px';
+            noBtn.style.top = Math.random() * maxY + 'px';
+            
+            // Change button text to a random response
+            if (clickCount < noResponses.length) {
+                noBtn.textContent = noResponses[clickCount];
+                clickCount++;
+            } else {
+                // If we've gone through all responses, start over
+                clickCount = 0;
+                noBtn.textContent = noResponses[clickCount];
+            }
+        });
+        
+        // Restart button
+        restartBtn.addEventListener('click', () => {
+            if (!surpriseShown) {
+                // First click - show surprise and play music
+                surpriseImage.style.display = 'block';
+                restartBtn.textContent = 'Go Back';
+                surpriseShown = true;
+                
+                // Show dancing baby and play music
+                dancingBaby.style.display = 'block';
+                surpriseMusic.play().catch(e => console.log("Auto-play was prevented:", e));
+                
+                // Scroll to show the surprise and dancing baby
+                dancingBaby.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                questionDiv.classList.remove('hidden');
+                responseDiv.classList.add('hidden');
+                clickCount = 0;
+                noBtn.textContent = 'No... 🤔';
+                noBtn.style.position = 'static';
+                surpriseImage.style.display = 'none';
+                dancingBaby.style.display = 'none';
+                surpriseShown = false;
+                restartBtn.textContent = 'Click for a surprise! 🎁';
+                
+                // Pause and reset the music
+                surpriseMusic.pause();
+                surpriseMusic.currentTime = 0;
+            }
+        });
+        
+        // Create floating hearts
+        function createHearts() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '💖';
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+        
+        // Generate hearts periodically
+        setInterval(createHearts, 300);
+    </script>
+</body>
 </html>
